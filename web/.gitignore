@@ -1,0 +1,10 @@
+# build files
+target
+
+# tmp files
+*.swp
+
+# idea files
+.idea
+.settings
+*.iml
