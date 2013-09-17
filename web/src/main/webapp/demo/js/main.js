@@ -6,8 +6,8 @@ $(function() {
     }
     var Client = function() {};
     Client.prototype ={
-        getSuggestions: function( query, cb ) {
-            $.getJSON( "/api/wiki/3125/suggest/" + query, function( response ) {
+        getSuggestions: function( wiki, query, cb ) {
+            $.getJSON( "/api/wiki/" + wiki + "/suggest/" + query, function( response ) {
                 cb(response);
             } )
         }
@@ -18,16 +18,27 @@ $(function() {
     SuggestionsViewModel.prototype = {
         setQuery: function( query ) {
             if ( this.query === query ) return;
+            this.query = query;
+            this.sendQuery();
+            this.trigger( "query changed", query );
+        },
+
+        setWiki: function( wiki ) {
+            this.wiki = wiki;
+            this.sendQuery();
+            this.trigger( "wiki changed", wiki );
+        },
+
+        sendQuery: function() {
             var self = this;
-            self.query = query;
-            client.getSuggestions( query, function(res) {
+            client.getSuggestions( this.wiki, this.query, function(res) {
                 self.setResults(res);
             } );
-            self.trigger( "query changed", query );
         },
+
         setResults: function( results ) {
             this.results = results;
-            this.setDisplayResults( results )
+            this.setDisplayResults( results );
             this.trigger( "results changed", results );
         },
 
@@ -43,7 +54,7 @@ $(function() {
         // event emitter pattern
         on: function( event, cb ) {
             this._ev = this._ev || {};
-            this._ev[event] = this._ev[event] || []
+            this._ev[event] = this._ev[event] || [];
             this._ev[event].push( cb );
         },
         trigger: function( ev, value ) {
@@ -58,7 +69,7 @@ $(function() {
         }
     };
 
-    var SuggestionsView = function( viewModel, searchInput, dropdown ) {
+    var SuggestionsView = function( viewModel, searchInput, dropdown, selectWiki ) {
         viewModel.on( "displayResults changed", function() {
             var results = viewModel.getDisplayResults();
             dropdown.empty();
@@ -84,7 +95,12 @@ $(function() {
                 viewModel.setQuery( value );
             }, 0);
         });
+        function updateWiki() {
+            viewModel.setWiki( parseInt( selectWiki.val() ) );
+        }
+        updateWiki();
+        selectWiki.change( updateWiki );
     };
 
-    new SuggestionsView( new SuggestionsViewModel(), $('input.search'), $('ul.search-suggest') );
+    new SuggestionsView( new SuggestionsViewModel(), $('input.search'), $('ul.search-suggest'), $('#select-wiki') );
 });
