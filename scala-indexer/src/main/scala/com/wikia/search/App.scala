@@ -2,13 +2,17 @@ package com.wikia.search
 
 import demo.indexing.IndexingActor
 import demo.util.AggregatorActor
-import demo.wiki.{GetIndexerDataFilter, GetDetailsFilter, Article, WikiArticleListProducer}
+import demo.wiki._
+import demo.wiki.Article
 import org.apache.solr.client.solrj.impl.HttpSolrServer
 import akka.actor.{ActorRef, ActorSystem, Props, Actor}
 import akka.contrib.throttle.TimerBasedThrottler
 import akka.contrib.throttle.Throttler._
 import concurrent.duration._
 import akka.util._
+import akka.contrib.throttle.Throttler.SetTarget
+import scala.Some
+import concurrent.Await
 
 object App {
 
@@ -25,16 +29,15 @@ object App {
     }
   }
   */
-  val system = ActorSystem("HelloSystem");
+  val system = ActorSystem("HelloSystem")
 
   def makeThrottle( nextActor: akka.actor.ActorRef ):ActorRef = {
     val throttler = system.actorOf(Props(classOf[TimerBasedThrottler], 1 msgsPer 1.second))
     throttler ! SetTarget(Some(nextActor))
-    return throttler
+    throttler
   }
 
   def main(args : Array[String]) {
-    println( "Hello World!" )
     val apiUrl = args(0)
 
     val client = new HttpSolrServer("http://localhost:8983/solr/suggest")

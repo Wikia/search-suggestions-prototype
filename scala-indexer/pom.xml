@@ -65,6 +65,11 @@
             <artifactId>lift-json_${scala.version}</artifactId>
             <version>2.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>net.liftweb</groupId>
+            <artifactId>lift-util_${scala.version}</artifactId>
+            <version>2.5.1</version>
+        </dependency>
         <!-- solr -->
         <!--
         <dependency>
