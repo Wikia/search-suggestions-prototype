@@ -1,6 +1,6 @@
 package com.wikia.search.demo.wiki
 
-import actors.Actor
+import akka.actor.{Actor,ActorRef}
 import concurrent.ExecutionContext.Implicits.global
 import dispatch._
 import java.net.URLEncoder
@@ -8,18 +8,13 @@ import net.liftweb.json._
 import com.wikia.search.demo.wiki.WikiaSearchIndexer.Get.{ResponseContents, Command, Response}
 
 
-class GetIndexerDataFilter( val apiUrl:String, val consumer:Actor ) extends Actor {
+class GetIndexerDataFilter( val apiUrl:String, val consumer:ActorRef ) extends Actor {
   var noneReceived = false
   var waitingForResponse:Int = 0
-  def act() {
-    println("act")
-    loop {
-      react {
-        case chunk: List[Article] => fetch( chunk )
-        case None => { noneReceived = true; checkFinish() }
-        case _ => println("IndexerService got unknonw message.")
-      }
-    }
+  def receive = {
+    case chunk: List[Article] => fetch( chunk )
+    case None => { noneReceived = true; checkFinish() }
+    case _ => println("IndexerService got unknonw message.")
   }
 
   def fetch ( chunk: List[Article] ) {

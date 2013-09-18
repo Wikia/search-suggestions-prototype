@@ -1,26 +1,21 @@
 package com.wikia.search.demo.wiki
 
-import actors.Actor
+import akka.actor.{Actor,ActorRef}
 import com.wikia.search.demo.wiki.ArticlesApi.GetDetails.Response
 import concurrent.ExecutionContext.Implicits.global
 import dispatch._
-import java.net.URLEncoder
 import net.liftweb.json._
 
 
-class GetDetailsFilter( val apiUrl:String , val consumer:Actor ) extends Actor {
+class GetDetailsFilter( val apiUrl:String , val consumer:ActorRef ) extends Actor {
   val imgSize = 50
   val abstractSize = 100
   var noneReceived = false
   var waitingForResponse:Int = 0
 
-  def act() {
-    loop {
-      react {
-        case chunk: List[Article] => fetch( chunk )
-        case None => { noneReceived = true; checkFinish() }
-      }
-    }
+  def receive = {
+    case chunk: List[Article] => fetch( chunk )
+    case None => { noneReceived = true; checkFinish() }
   }
 
   def fetch ( chunk: List[Article] ) {
@@ -57,6 +52,6 @@ class GetDetailsFilter( val apiUrl:String , val consumer:Actor ) extends Actor {
   def finish() {
     println("finish")
     consumer ! None
-    exit()
+    //exit()
   }
 }

@@ -9,10 +9,10 @@
     <artifactId>scala-indexer</artifactId>
     <name>${project.artifactId}</name>
     <description>My wonderfull scala app</description>
-    <inceptionYear>2010</inceptionYear>
+    <inceptionYear>2013</inceptionYear>
     <licenses>
         <license>
-            <name>My License</name>
+            <name>GPL v2</name>
             <url>http://....</url>
             <distribution>repo</distribution>
         </license>
@@ -91,6 +91,19 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
         </dependency>
+
+        <!-- akka -->
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_${scala.version}</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-contrib_${scala.version}</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+
 
 
         <!-- Test -->

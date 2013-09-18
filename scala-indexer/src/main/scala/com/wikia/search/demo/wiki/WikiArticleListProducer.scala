@@ -1,7 +1,7 @@
 package com.wikia.search.demo.wiki
 
-import actors.Actor
-import actors.Actor._
+import akka.actor.Actor
+import akka.actor.ActorRef
 import com.wikia.search.demo.wiki.ArticlesApi.GetList.Response
 import concurrent.ExecutionContext.Implicits.global
 import dispatch._
@@ -9,16 +9,16 @@ import net.liftweb.json._
 import java.net.URLEncoder
 
 
-class WikiArticleListProducer( val apiUrl: String, val consumer: Actor ) {
+class WikiArticleListProducer( val apiUrl: String, val consumer: ActorRef ) {
   val limit = 500
 
-  def start() = {
+  def start() {
     processor ! ""
   }
 
-  private val processor:Actor = actor {
-    loop {
-      react {
+  private val processor:scala.actors.Actor = scala.actors.Actor.actor {
+    scala.actors.Actor.loop {
+      scala.actors.Actor.react {
         case offset:String => {
           val requestUrl = apiUrl + "?controller=ArticlesApi&method=getList" +
             "&offset=" + URLEncoder.encode(offset, "utf-8") +
@@ -35,7 +35,7 @@ class WikiArticleListProducer( val apiUrl: String, val consumer: Actor ) {
             }
             articles.offset match {
               case Some(x) => { processor ! x }
-              case None => { consumer ! None; /* exit() */ }
+              case None => { /* consumer ! None;  exit() */ }
             }
           }
         }
