@@ -10,6 +10,7 @@ class DocumentMapper {
     documentMap.addField("id", article.wikiId + "_" + article.id )
     documentMap.addField("pageId_i", "" + article.id )
     documentMap.addField("wikiId_i", "" + article.wikiId )
+    documentMap.addField("backlinks_i", "" + article.backlinkCount )
     documentMap.addField("title_ngram", article.title )
     documentMap.addField("redirects_ngram_mv", seqAsJavaList(article.redirects) )
     documentMap.addField("abstract_en", article.`abstract` )

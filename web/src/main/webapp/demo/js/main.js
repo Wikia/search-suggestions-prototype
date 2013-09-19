@@ -95,6 +95,10 @@ $(function() {
                 viewModel.setQuery( value );
             }, 0);
         });
+        searchInput.on( "keyup", function () {
+            var value = searchInput.val();
+            viewModel.setQuery( value );
+        });
         function updateWiki() {
             viewModel.setWiki( parseInt( selectWiki.val() ) );
         }

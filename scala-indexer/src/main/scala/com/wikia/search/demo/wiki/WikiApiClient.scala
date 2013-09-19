@@ -76,7 +76,7 @@ class WikiApiClient( val apiUrl:String ) {
   def request( path:String, idList: List[Int]):Future[String] = {
     val ids: String = idList.map(x => x.toString).reduce((a, b) => a + "|" + b)
     val requestUrl = apiUrl + path +
-      "&ids=" + ids
+      "&ids=" + URLEncoder.encode( ids, "ASCII" )
     val response = url(requestUrl)
     Http(response OK as.String)
   }

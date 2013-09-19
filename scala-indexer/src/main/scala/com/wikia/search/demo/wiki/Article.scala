@@ -8,13 +8,6 @@ case class Article(
                     url:String,
                     `abstract`:String = null,
                     thumbnail: String = null,
-                    var redirects:List[String] = List()
-                    ) {
-  def redirectsString:String = {
-    val content = redirects.map( x => '"' + x + '"').reduceOption( (a,b) => a+","+b ) match {
-      case None => ""
-      case x => x
-    }
-    return "[" + content + "]"
-  }
-}
+                    var redirects:List[String] = List(),
+                    var backlinkCount:Int = 0
+                    )

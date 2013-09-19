@@ -39,12 +39,13 @@ object App {
 
   def main(args : Array[String]) {
     val apiUrl = args(0)
+    val api = new WikiApiClient( apiUrl );
 
     val client = new HttpSolrServer("http://localhost:8983/solr/suggest")
     val indexer = system.actorOf( Props(new IndexingActor( client )) )
 
     val preIndexerAggregate =  system.actorOf(Props(new AggregatorActor[Article]( 120, indexer )))
-    val getIndexerDataFilter = system.actorOf(Props(new GetIndexerDataFilter( apiUrl, preIndexerAggregate )))
+    val getIndexerDataFilter = system.actorOf(Props(new GetIndexerDataFilter( api, preIndexerAggregate )))
     val throttle1 = makeThrottle( getIndexerDataFilter )
     val getIndexerServiceAggregate = system.actorOf(Props(new AggregatorActor[Article]( 120, throttle1 )))
     val getDetails = system.actorOf(Props(new GetDetailsFilter( apiUrl, getIndexerServiceAggregate )))
