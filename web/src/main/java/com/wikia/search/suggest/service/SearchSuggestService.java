@@ -25,7 +25,7 @@ public class SearchSuggestService implements SearchService {
         try {
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setQuery("wikiId_i:" + wikiId);
-            solrQuery.addFilterQuery("(title_ngram:\"" + query + "\") OR (redirects_ngram:\"" + query + "\")");
+            solrQuery.addFilterQuery("(title_ngram:\"" + query + "\") OR (redirects_ngram_mv:\"" + query + "\")");
             solrQuery.addSort("views_i", SolrQuery.ORDER.desc);
             solrQuery.addSort("backlinks_i", SolrQuery.ORDER.desc);
             QueryResponse response = solrServer.query(solrQuery);
