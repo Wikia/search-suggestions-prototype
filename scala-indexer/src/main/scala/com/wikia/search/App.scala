@@ -29,7 +29,7 @@ object App {
     }
   }
   */
-  val system = ActorSystem("HelloSystem")
+  val system = ActorSystem("IndexingSystem")
 
   def makeThrottle( nextActor: akka.actor.ActorRef ):ActorRef = {
     val throttler = system.actorOf(Props(classOf[TimerBasedThrottler], 1 msgsPer 1.second))
@@ -39,7 +39,7 @@ object App {
 
   def main(args : Array[String]) {
     val apiUrl = args(0)
-    val api = new WikiApiClient( apiUrl );
+    val api = new WikiApiClient( apiUrl )
 
     val client = new HttpSolrServer("http://localhost:8983/solr/suggest")
     val indexer = system.actorOf( Props(new IndexingActor( client )) )
@@ -48,7 +48,7 @@ object App {
     val getIndexerDataFilter = system.actorOf(Props(new GetIndexerDataFilter( api, preIndexerAggregate )))
     val throttle1 = makeThrottle( getIndexerDataFilter )
     val getIndexerServiceAggregate = system.actorOf(Props(new AggregatorActor[Article]( 120, throttle1 )))
-    val getDetails = system.actorOf(Props(new GetDetailsFilter( apiUrl, getIndexerServiceAggregate )))
+    val getDetails = system.actorOf(Props(new GetDetailsFilter( api, getIndexerServiceAggregate )))
     val throttle2 = makeThrottle( getDetails )
     val aggregate = system.actorOf(Props(new AggregatorActor[Article]( 120, throttle2 )))
     new WikiArticleListProducer( apiUrl , aggregate ).start()

@@ -38,7 +38,7 @@ class AggregatorActor[T]( val maxAggregateSize: Int, val consumer: ActorRef )
   onTransition {
     case Hoarding -> Waiting =>
       stateData match {
-        case Data(queue) => consumer ! queue
+        case Data(queue) => log.debug("Sending: " + queue.length); consumer ! queue
       }
   }
 }

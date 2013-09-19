@@ -26,7 +26,7 @@ class WikiArticleListProducer( val apiUrl: String, val consumer: ActorRef ) {
           println(requestUrl)
           val response = url(requestUrl)
           val responseString = Http(response OK as.String)
-          for ( plainJson <- responseString ) {
+          for ( plainJson <- responseString ) yield {
             implicit val formats = net.liftweb.json.DefaultFormats
             val json = parse( plainJson )
             val articles = json.extract[Response]
