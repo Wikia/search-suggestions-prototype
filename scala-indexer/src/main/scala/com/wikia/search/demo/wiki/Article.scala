@@ -9,5 +9,6 @@ case class Article(
                     `abstract`:String = null,
                     thumbnail: String = null,
                     var redirects:List[String] = List(),
-                    var backlinkCount:Int = 0
+                    var backlinkCount:Int = 0,
+                    var views:Int = 0
                     )

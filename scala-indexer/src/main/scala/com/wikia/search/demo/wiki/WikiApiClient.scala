@@ -19,10 +19,12 @@ case class DetailsInfo( id:Int,
     new Article(-1,id,title,ns,url,`abstract`, thumbnail )
   }
 }
+case class MetadataInfo( wikiId:Int, pageId:Int, views:Int  ) // maybe return more information here. Just not need it right now.
 case class GetDetailsResponse(
                      items: Map[String, DetailsInfo],
                      basepath: String
                      )
+
 
 class WikiApiClient( val apiUrl:String ) {
   val log = LoggerFactory.getLogger(classOf[WikiApiClient])
@@ -45,6 +47,24 @@ class WikiApiClient( val apiUrl:String ) {
       }).toMap
     }
   }
+
+  def getMetadata( idList:List[Int] ):Future[Map[Int, MetadataInfo]]= {
+    val responseStringFuture = request("?controller=WikiaSearchIndexer&method=get&service=Metadata", idList)
+    responseStringFuture.map { (plainJson) =>
+      parseIndexerResponse( plainJson, (pageDescription:Map[String,Any]) => {
+        val id = pageDescription("id").toString.split("_")(1).toInt
+        val wikiId = pageDescription("id").toString.split("_")(0).toInt
+        val views = pageDescription("views") match {
+          case y:Map[String, Any] => y("set") match {
+            case views:Double => views.toInt
+            case views:Int => views
+          }
+        }
+        (id, MetadataInfo(wikiId,id,views))
+      } ).toMap
+    }
+  }
+
 
   def redirects( idList:List[Int] ):Future[Map[Int, RedirectsInfo]]= {
     val responseStringFuture = request("?controller=WikiaSearchIndexer&method=get&service=Redirects", idList)

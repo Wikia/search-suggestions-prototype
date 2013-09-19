@@ -11,6 +11,7 @@ class DocumentMapper {
     documentMap.addField("pageId_i", "" + article.id )
     documentMap.addField("wikiId_i", "" + article.wikiId )
     documentMap.addField("backlinks_i", "" + article.backlinkCount )
+    documentMap.addField("views_i", "" + article.views )
     documentMap.addField("title_ngram", article.title )
     documentMap.addField("redirects_ngram_mv", seqAsJavaList(article.redirects) )
     documentMap.addField("abstract_en", article.`abstract` )

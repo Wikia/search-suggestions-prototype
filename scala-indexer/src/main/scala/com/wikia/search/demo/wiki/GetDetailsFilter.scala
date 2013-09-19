@@ -16,8 +16,8 @@ class GetDetailsFilter( val api:WikiApiClient , val consumer:ActorRef ) extends 
     val ids:List[Int] = chunk.map( x => x.id )
 
     for ( detailsSet <- api.details( ids, imgSize, imgSize, abstractSize ) ) yield {
-      for ( articleDetails <- detailsSet.values ) {
-        val article = articleDetails.toArticle()
+      for ( articleDetails:DetailsInfo <- detailsSet.values ) {
+        val article:Article = articleDetails.toArticle
         consumer ! article
       }
     }

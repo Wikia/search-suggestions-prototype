@@ -37,21 +37,25 @@ object App {
     throttler
   }
 
+  def makeThrottledActor[T]( actor:Props, batchSize: Int ):ActorRef = {
+    val consumer =  system.actorOf(actor)
+    val throttle = makeThrottle( consumer )
+    system.actorOf(Props( new AggregatorActor[T](batchSize, throttle) ))
+
+  }
+
   def main(args : Array[String]) {
     val apiUrl = args(0)
     val api = new WikiApiClient( apiUrl )
 
     val client = new HttpSolrServer("http://localhost:8983/solr/suggest")
-    val indexer = system.actorOf( Props(new IndexingActor( client )) )
 
-    val preIndexerAggregate =  system.actorOf(Props(new AggregatorActor[Article]( 120, indexer )))
-    val getIndexerDataFilter = system.actorOf(Props(new GetIndexerDataFilter( api, preIndexerAggregate )))
-    val throttle1 = makeThrottle( getIndexerDataFilter )
-    val getIndexerServiceAggregate = system.actorOf(Props(new AggregatorActor[Article]( 120, throttle1 )))
-    val getDetails = system.actorOf(Props(new GetDetailsFilter( api, getIndexerServiceAggregate )))
-    val throttle2 = makeThrottle( getDetails )
-    val aggregate = system.actorOf(Props(new AggregatorActor[Article]( 120, throttle2 )))
-    new WikiArticleListProducer( apiUrl , aggregate ).start()
+    val indexer =  makeThrottledActor(Props(new IndexingActor( client )), 300)
+    val indexerServiceData =  makeThrottledActor(Props(new GetIndexerDataFilter( api, indexer )), 100)
+    val getDetails = makeThrottledActor(Props(new GetDetailsFilter( api, indexerServiceData )), 200)
+
+    new WikiArticleListProducer( apiUrl , getDetails ).start()
+
     system.awaitTermination()
   }
 

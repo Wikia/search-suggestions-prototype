@@ -23,7 +23,6 @@ class WikiArticleListProducer( val apiUrl: String, val consumer: ActorRef ) {
           val requestUrl = apiUrl + "?controller=ArticlesApi&method=getList" +
             "&offset=" + URLEncoder.encode(offset, "utf-8") +
             "&limit=" + limit
-          println(requestUrl)
           val response = url(requestUrl)
           val responseString = Http(response OK as.String)
           for ( plainJson <- responseString ) yield {
