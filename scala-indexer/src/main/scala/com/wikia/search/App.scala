@@ -32,15 +32,15 @@ object App {
   val system = ActorSystem("IndexingSystem")
 
   def makeThrottle( nextActor: akka.actor.ActorRef ):ActorRef = {
-    val throttler = system.actorOf(Props(classOf[TimerBasedThrottler], 1 msgsPer 1.second))
+    val throttler = system.actorOf(Props(classOf[TimerBasedThrottler], 10 msgsPer 1.second))
     throttler ! SetTarget(Some(nextActor))
     throttler
   }
 
-  def makeThrottledActor[T]( actor:Props, batchSize: Int ):ActorRef = {
+  def makeThrottledActor( actor:Props, batchSize: Int ):ActorRef = {
     val consumer =  system.actorOf(actor)
     val throttle = makeThrottle( consumer )
-    system.actorOf(Props( new AggregatorActor[T](batchSize, throttle) ))
+    system.actorOf(Props( new AggregatorActor(batchSize, throttle) ))
 
   }
 
@@ -51,7 +51,7 @@ object App {
     val client = new HttpSolrServer("http://localhost:8983/solr/suggest")
 
     val indexer =  makeThrottledActor(Props(new IndexingActor( client )), 300)
-    val indexerServiceData =  makeThrottledActor(Props(new GetIndexerDataFilter( api, indexer )), 100)
+    val indexerServiceData =  makeThrottledActor(Props(new GetIndexerDataFilter( api, indexer )), 1)
     val getDetails = makeThrottledActor(Props(new GetDetailsFilter( api, indexerServiceData )), 200)
 
     new WikiArticleListProducer( apiUrl , getDetails ).start()
