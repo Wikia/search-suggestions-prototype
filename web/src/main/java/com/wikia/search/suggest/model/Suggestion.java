@@ -2,7 +2,6 @@ package com.wikia.search.suggest.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Suggestion {
@@ -15,6 +14,8 @@ public class Suggestion {
     private List<String> redirects;
     @Field("thumbnail_url")
     private String thumbnail = "http://slot1.images.wikia.nocookie.net/__cb62283/common/extensions/wikia/Search/images/wiki_image_placeholder.png";
+    @Field("abstract_en") // TODO make it language agnostic
+    private String summary;
 
     public long getId() {
         return id;
@@ -45,5 +46,13 @@ public class Suggestion {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }
