@@ -1,9 +1,10 @@
 define("suggest_matcher", [], function() {
-    function testChar( char ) {
-        return char.match(/[_\-)(*&^%$#@!\s]/) != null;
+    function testChar( character ) {
+        // todo change regex to match solr logic
+        return character.match(/[_\-)(*&^%$#@!\s:"<>(){}\[\]?\/"']+/) != null;
     }
-    function getChar( char ) {
-        return testChar( char ) ? '' : char.toLocaleLowerCase();
+    function getChar( character ) {
+        return testChar( character ) ? '' : character.toLocaleLowerCase();
     }
     function matchStartingFrom( title, pattern, from ) {
         var len = 0, patternPos = 0;

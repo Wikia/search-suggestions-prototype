@@ -12,6 +12,7 @@
         <module>scalate-web</module>
         <module>scala-indexer</module>
         <module>web</module>
+        <module>lucene-contrib</module>
     </modules>
 
 
