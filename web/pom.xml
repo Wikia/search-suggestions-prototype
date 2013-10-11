@@ -15,7 +15,7 @@
     <description>Simple CXF JAX-RS webapp service using spring configuration</description>
     <properties>
         <jackson.version>1.8.6</jackson.version>
-        <jettyVersion>8.1.9.v20130131</jettyVersion>
+        <jettyVersion>8.1.12.v20130726</jettyVersion>
     </properties>
     <dependencies>
         <dependency>
@@ -132,6 +132,14 @@
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
                     <version>${jettyVersion}</version>
+                    <configuration>
+                        <systemproperties>
+                            <systemproperty>
+                                <name>jetty.port</name>
+                                <value>13080</value>
+                            </systemproperty>
+                        </systemproperties>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
