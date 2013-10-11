@@ -133,12 +133,12 @@
                     <artifactId>jetty-maven-plugin</artifactId>
                     <version>${jettyVersion}</version>
                     <configuration>
-                        <systemproperties>
-                            <systemproperty>
-                                <name>jetty.port</name>
-                                <value>13080</value>
-                            </systemproperty>
-                        </systemproperties>
+                        <connectors>
+                            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                                <port>13000</port>
+                                <maxIdleTime>60000</maxIdleTime>
+                            </connector>
+                        </connectors>
                     </configuration>
                 </plugin>
                 <plugin>
