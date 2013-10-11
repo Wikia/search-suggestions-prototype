@@ -15,6 +15,7 @@
     <description>Simple CXF JAX-RS webapp service using spring configuration</description>
     <properties>
         <jackson.version>1.8.6</jackson.version>
+        <jettyVersion>8.1.9.v20130131</jettyVersion>
     </properties>
     <dependencies>
         <dependency>
@@ -46,6 +47,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>3.0.7.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- logs -->
@@ -85,6 +93,12 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jettyVersion}</version>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -103,9 +117,21 @@
                                 <port>13000</port>
                                 <path>/jaxrs-service</path>
                                 <useSeparateTomcatClassLoader>true</useSeparateTomcatClassLoader>
+                                <systemProperties>
+                                    <java.util.logging.manager>org.apache.juli.ClassLoaderLogManager</java.util.logging.manager>
+                                </systemProperties>
+                                <useSeparateTomcatClassLoader>
+                                    false
+                                </useSeparateTomcatClassLoader>
                             </configuration>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <!-- This plugin is needed for the servlet example -->
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>${jettyVersion}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
