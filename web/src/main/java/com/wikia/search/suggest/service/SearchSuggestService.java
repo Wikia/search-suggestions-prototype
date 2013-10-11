@@ -20,19 +20,23 @@ public class SearchSuggestService implements SearchService {
     @Qualifier("solrSlave")
     private SolrServer solrServer;
 
+    private int timeAllowed = 500;
+
     @Override
-    public List<Suggestion> search( int wikiId, String query ) {
+    public List<Suggestion> search( int wikiId, String query ) throws SearchException {
         try {
             SolrQuery solrQuery = new SolrQuery();
+            solrQuery.setTimeAllowed( timeAllowed );
             solrQuery.setQuery("wikiId_i:" + wikiId);
             solrQuery.addFilterQuery("(title_ngram:\"" + query + "\") OR (redirects_ngram_mv:\"" + query + "\")");
             solrQuery.addSort("views_i", SolrQuery.ORDER.desc);
             solrQuery.addSort("backlinks_i", SolrQuery.ORDER.desc);
             QueryResponse response = solrServer.query(solrQuery);
+
             return response.getBeans(Suggestion.class);
         } catch (SolrServerException e) {
             logger.error(MessageFormat.format("Error while fetching results for {0},\"{1}\"", wikiId, query), e);
-            throw new RuntimeException(e);
+            throw new SearchException(e);
         }
     }
 }

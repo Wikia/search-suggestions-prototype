@@ -18,17 +18,37 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
   <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"/>
 
     <jaxrs:server id="services" address="/">
-    <jaxrs:serviceBeans>
-        <ref bean="searchSuggestRS"/>
-    </jaxrs:serviceBeans>
-    <jaxrs:providers>
-        <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
-    </jaxrs:providers>
+        <jaxrs:serviceBeans>
+            <ref bean="searchSuggestRS"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.wikia.search.http.CrossOriginResourceSharingFilter"/>
+            <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+        </jaxrs:providers>
     </jaxrs:server>
+
+    <bean name="metricRegistry" class="com.codahale.metrics.MetricRegistry"/>
+    <bean name="healthCheckRegistry" class="com.codahale.metrics.health.HealthCheckRegistry"/>
+    <bean name="healthCheckRegistryBean" class="com.wikia.search.healthcheck.HealthCheckRegistryBean">
+        <property name="registry" ref="healthCheckRegistry"/>
+        <property name="healthChecks">
+            <map>
+                <entry key="Solr Health Check">
+                    <bean class="com.wikia.search.healthcheck.SolrHealthCheck" />
+                </entry>
+            </map>
+        </property>
+    </bean>
 
     <bean name="solrConnectionFactory" class="com.wikia.search.solr.SolrConnectionFactory"/>
     <bean name="solrSlave" factory-bean="solrConnectionFactory" factory-method="getSlave"/>
     <bean name="solrMaster" factory-bean="solrConnectionFactory" factory-method="getMaster"/>
-    <bean name="searchSuggestService" class="com.wikia.search.suggest.service.SearchSuggestService"/>
+    <bean name="searchSuggestService" class="com.wikia.search.suggest.service.SearchServiceMetricsGatherer">
+        <constructor-arg name="searchService">
+            <bean class="com.wikia.search.suggest.service.SearchSuggestService" />
+        </constructor-arg>
+        <constructor-arg name="registry" ref="metricRegistry" />
+    </bean>
+
     <bean name="searchSuggestRS" class="com.wikia.search.suggest.rest.SearchSuggestRestService"/>
 </beans>

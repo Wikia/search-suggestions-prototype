@@ -5,5 +5,5 @@ import com.wikia.search.suggest.model.Suggestion;
 import java.util.List;
 
 public interface SearchService {
-    List<Suggestion> search( int wikiId, String query );
+    List<Suggestion> search( int wikiId, String query ) throws SearchException;
 }
