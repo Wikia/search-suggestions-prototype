@@ -10,6 +10,8 @@ public class Suggestion {
     private Integer id;
     @Field("title_ngram")
     private String title;
+    @Field("pageUrl_url")
+    private String path;
     @Field("redirects_ngram_mv")
     private List<String> redirects;
     @Field("thumbnail_url")
@@ -54,5 +56,13 @@ public class Suggestion {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

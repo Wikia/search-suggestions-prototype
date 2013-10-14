@@ -16,7 +16,6 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
   <context:annotation-config/>
   <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer"/>
   <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"/>
-
     <jaxrs:server id="services" address="/">
         <jaxrs:serviceBeans>
             <ref bean="searchSuggestRS"/>
@@ -26,6 +25,9 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
             <bean class="com.wikia.search.http.CrossOriginResourceSharingFilter"/>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
         </jaxrs:providers>
+        <jaxrs:outInterceptors>
+            <bean class="org.apache.cxf.transport.common.gzip.GZIPOutInterceptor" />
+        </jaxrs:outInterceptors>
     </jaxrs:server>
 
     <bean name="solrHealthCheck" class="com.wikia.search.monitor.healthcheck.SolrHealthCheck" lazy-init="true" />
