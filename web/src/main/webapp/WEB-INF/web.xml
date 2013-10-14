@@ -19,11 +19,6 @@
 	</listener>
     <listener>
         <listener-class>
-            com.wikia.search.http.HealthCheckServletContextListener
-        </listener-class>
-    </listener>
-    <listener>
-        <listener-class>
             com.wikia.search.http.MetricsServletContextListener
         </listener-class>
     </listener>
@@ -39,20 +34,6 @@
     <servlet-mapping>
         <servlet-name>CXFServlet</servlet-name>
         <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>HealthCheckServlet</servlet-name>
-        <servlet-class>
-            com.codahale.metrics.servlets.HealthCheckServlet
-        </servlet-class>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>HealthCheckServlet</servlet-name>
-        <url-pattern>/ping</url-pattern>
     </servlet-mapping>
 
     <servlet>

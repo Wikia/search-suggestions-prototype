@@ -1,4 +1,4 @@
-package com.wikia.search.monitor;
+package com.wikia.search.monitor.healthcheck;
 
 import com.codahale.metrics.health.HealthCheck;
 import org.springframework.beans.factory.annotation.Autowired;

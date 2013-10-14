@@ -1,4 +1,4 @@
-package com.wikia.search.healthcheck;
+package com.wikia.search.monitor.healthcheck;
 
 import com.codahale.metrics.health.HealthCheck;
 import org.apache.solr.client.solrj.SolrServer;

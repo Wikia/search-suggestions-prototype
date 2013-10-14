@@ -1,5 +1,9 @@
 package com.wikia.search.monitor;
 
+import com.wikia.search.monitor.slowqueries.GreedySlowQueryMonitor;
+import com.wikia.search.monitor.slowqueries.HttpRequestMeasurement;
+import com.wikia.search.monitor.slowqueries.SlowQueryMonitor;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

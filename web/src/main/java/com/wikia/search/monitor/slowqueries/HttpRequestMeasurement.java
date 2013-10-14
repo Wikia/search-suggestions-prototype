@@ -1,4 +1,4 @@
-package com.wikia.search.monitor;
+package com.wikia.search.monitor.slowqueries;
 
 import org.joda.time.DateTime;
 

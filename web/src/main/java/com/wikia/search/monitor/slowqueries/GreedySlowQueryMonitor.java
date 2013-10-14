@@ -1,9 +1,8 @@
-package com.wikia.search.monitor;
+package com.wikia.search.monitor.slowqueries;
 
+import com.wikia.search.monitor.TimeFrame;
 import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;

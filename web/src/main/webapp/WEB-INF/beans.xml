@@ -20,7 +20,7 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
     <jaxrs:server id="services" address="/">
         <jaxrs:serviceBeans>
             <ref bean="searchSuggestRS"/>
-            <bean class="com.wikia.search.healthcheck.rest.HealthRestService" />
+            <bean class="com.wikia.search.monitor.rest.HealthRestService" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.wikia.search.http.CrossOriginResourceSharingFilter"/>
@@ -28,20 +28,10 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
         </jaxrs:providers>
     </jaxrs:server>
 
-    <bean name="solrHealthCheck" class="com.wikia.search.healthcheck.SolrHealthCheck" lazy-init="true" />
-    <bean name="healthCheckService" class="com.wikia.search.monitor.HealthCheckServiceImpl"/>
+    <bean name="solrHealthCheck" class="com.wikia.search.monitor.healthcheck.SolrHealthCheck" lazy-init="true" />
+    <bean name="healthCheckService" class="com.wikia.search.monitor.healthcheck.HealthCheckServiceImpl"/>
     <bean name="metricRegistry" class="com.codahale.metrics.MetricRegistry"/>
     <bean name="healthCheckRegistry" class="com.codahale.metrics.health.HealthCheckRegistry"/>
-    <bean name="healthCheckRegistryBean" class="com.wikia.search.healthcheck.HealthCheckRegistryBean">
-        <property name="registry" ref="healthCheckRegistry"/>
-        <property name="healthChecks">
-            <map>
-                <entry key="Solr Health Check">
-                    <ref bean="solrHealthCheck"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
 
     <bean name="httpMonitoringProcessor" class="com.wikia.search.solr.HttpMonitoringProcessor"/>
     <bean name="solrConnectionFactory" class="com.wikia.search.solr.SolrConnectionFactory">

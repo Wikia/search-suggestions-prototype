@@ -2,7 +2,7 @@ package com.wikia.search.solr;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
-import com.wikia.search.monitor.HttpRequestMeasurement;
+import com.wikia.search.monitor.slowqueries.HttpRequestMeasurement;
 import com.wikia.search.monitor.MonitorService;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;

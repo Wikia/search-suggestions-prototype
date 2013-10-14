@@ -1,6 +1,9 @@
-package com.wikia.search.healthcheck.rest;
+package com.wikia.search.monitor.rest;
 
 import com.wikia.search.monitor.*;
+import com.wikia.search.monitor.healthcheck.HealthCheckResult;
+import com.wikia.search.monitor.healthcheck.HealthCheckService;
+import com.wikia.search.monitor.slowqueries.HttpRequestMeasurement;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.GET;
