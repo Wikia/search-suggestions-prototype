@@ -79,7 +79,7 @@ define("plain_client", ["jquery", "suggest_matcher", "log"], function($, matcher
     return {
         getSuggestions: function( wiki, query, cb ) {
             if ( !wiki || !query || query == '' ) cb( [], false );
-            $.getJSON( "/api/wiki/" + wiki + "/suggest/" + query, function( response ) {
+            $.getJSON( "/api/search-suggest/", { wikiId: wiki, q: query }, function( response ) {
                 for ( var i = 0; i<response.length; i++ ) {
                     var suggestion = response[i];
                     var matchResult = matcher.matchSuggestion( suggestion, query );

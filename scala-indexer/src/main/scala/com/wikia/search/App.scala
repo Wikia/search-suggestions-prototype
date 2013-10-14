@@ -51,7 +51,7 @@ object App {
     val client = new HttpSolrServer("http://localhost:8983/solr/suggest")
 
     val indexer =  makeThrottledActor(Props(new IndexingActor( client )), 300)
-    val indexerServiceData =  makeThrottledActor(Props(new GetIndexerDataFilter( api, indexer )), 1)
+    val indexerServiceData =  makeThrottledActor(Props(new GetIndexerDataFilter( api, indexer )), 50)
     val getDetails = makeThrottledActor(Props(new GetDetailsFilter( api, indexerServiceData )), 200)
 
     new WikiArticleListProducer( apiUrl , getDetails ).start()

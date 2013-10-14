@@ -1,6 +1,7 @@
 package com.wikia.search.suggest.service;
 
 import com.codahale.metrics.Histogram;
+import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.wikia.search.suggest.model.Suggestion;
@@ -11,15 +12,15 @@ import static com.codahale.metrics.MetricRegistry.name;
 
 public class SearchServiceMetricsGatherer implements SearchService {
     private final SearchService searchService;
-    private final MetricRegistry registry;
     private final Histogram resultCounts;
+    private final Meter requestsMeter;
     private final Timer timer;
 
-    public SearchServiceMetricsGatherer(SearchService searchService, MetricRegistry registry) {
+    public SearchServiceMetricsGatherer(SearchService searchService, MetricRegistry registry, String serviceName) {
         this.searchService = searchService;
-        this.registry = registry;
-        resultCounts = this.registry.histogram(name(SearchServiceMetricsGatherer.class, "result-counts"));
-        timer = registry.timer(name(SearchServiceMetricsGatherer.class, "requests-time"));
+        resultCounts = registry.histogram(name(serviceName, "result-counts"));
+        requestsMeter = registry.meter(name(serviceName, "requests"));
+        timer = registry.timer(name(serviceName, "requests-time"));
     }
 
     @Override
@@ -36,6 +37,7 @@ public class SearchServiceMetricsGatherer implements SearchService {
             if ( searchResult != null ) {
                 resultCounts.update(searchResult.size());
             }
+            requestsMeter.mark();
         }
 
     }

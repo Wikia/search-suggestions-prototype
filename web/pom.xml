@@ -86,6 +86,13 @@
             <version>3.0.1</version>
         </dependency>
 
+        <!-- util -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.2</version>
+        </dependency>
+
         <!-- tests -->
         <dependency>
             <groupId>junit</groupId>

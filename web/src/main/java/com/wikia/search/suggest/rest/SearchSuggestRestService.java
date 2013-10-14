@@ -10,12 +10,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
-@Path("wiki")
+@Path("search-suggest")
 public class SearchSuggestRestService {
     private static Logger logger = LoggerFactory.getLogger(SearchSuggestRestService.class);
 
@@ -24,11 +25,21 @@ public class SearchSuggestRestService {
     private SearchService searchSuggestService;
 
     @GET
-    @Path("{wikiId}/suggest/{input}")
+    @Path("/")
     @Produces("application/json")
-    public Response suggest(@PathParam("wikiId") int wikiId,@PathParam("input") String input) {
+    public Response suggest(@QueryParam("wikiId") Integer wikiId,
+                            @QueryParam("q") String queryString,
+                            @QueryParam("bid") String beaconId,
+                            @QueryParam("pvid") String pageViewId ) {
+        if ( wikiId == null ) {
+            return Response.serverError().entity("You need to specify wikiId.").build();
+        }
+        if ( queryString == null ) {
+            return Response.ok().entity(new ArrayList()).build();
+        }
+
         try {
-            List<Suggestion> suggestions = searchSuggestService.search(wikiId, input);
+            List<Suggestion> suggestions = searchSuggestService.search(wikiId, queryString);
             return Response.ok().entity(suggestions).build();
         } catch (SearchException e) {
             logger.error("Error while trying to get suggestions.");

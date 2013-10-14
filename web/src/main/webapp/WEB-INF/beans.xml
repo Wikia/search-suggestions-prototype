@@ -20,6 +20,7 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
     <jaxrs:server id="services" address="/">
         <jaxrs:serviceBeans>
             <ref bean="searchSuggestRS"/>
+            <bean class="com.wikia.search.healthcheck.rest.HealthRestService" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.wikia.search.http.CrossOriginResourceSharingFilter"/>
@@ -27,6 +28,8 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
         </jaxrs:providers>
     </jaxrs:server>
 
+    <bean name="solrHealthCheck" class="com.wikia.search.healthcheck.SolrHealthCheck" lazy-init="true" />
+    <bean name="healthCheckService" class="com.wikia.search.monitor.HealthCheckServiceImpl"/>
     <bean name="metricRegistry" class="com.codahale.metrics.MetricRegistry"/>
     <bean name="healthCheckRegistry" class="com.codahale.metrics.health.HealthCheckRegistry"/>
     <bean name="healthCheckRegistryBean" class="com.wikia.search.healthcheck.HealthCheckRegistryBean">
@@ -34,13 +37,21 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
         <property name="healthChecks">
             <map>
                 <entry key="Solr Health Check">
-                    <bean class="com.wikia.search.healthcheck.SolrHealthCheck" />
+                    <ref bean="solrHealthCheck"/>
                 </entry>
             </map>
         </property>
     </bean>
 
-    <bean name="solrConnectionFactory" class="com.wikia.search.solr.SolrConnectionFactory"/>
+    <bean name="httpMonitoringProcessor" class="com.wikia.search.solr.HttpMonitoringProcessor"/>
+    <bean name="solrConnectionFactory" class="com.wikia.search.solr.SolrConnectionFactory">
+        <constructor-arg name="httpProcessors">
+            <array>
+                <!-- monitor solr query performance -->
+                <ref bean="httpMonitoringProcessor" />
+            </array>
+        </constructor-arg>
+    </bean>
     <bean name="solrSlave" factory-bean="solrConnectionFactory" factory-method="getSlave"/>
     <bean name="solrMaster" factory-bean="solrConnectionFactory" factory-method="getMaster"/>
     <bean name="searchSuggestService" class="com.wikia.search.suggest.service.SearchServiceMetricsGatherer">
@@ -48,7 +59,26 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
             <bean class="com.wikia.search.suggest.service.SearchSuggestService" />
         </constructor-arg>
         <constructor-arg name="registry" ref="metricRegistry" />
+        <constructor-arg name="serviceName" value="simple"/>
     </bean>
 
     <bean name="searchSuggestRS" class="com.wikia.search.suggest.rest.SearchSuggestRestService"/>
+    <bean name="monitorServiceFactory" class="com.wikia.search.monitor.MonitorServiceFactory">
+        <property name="slowQueriesCount" value="10"/>
+        <property name="timeFrames">
+            <array>
+                <bean class="com.wikia.search.monitor.TimeFrame" factory-method="minutes">
+                    <constructor-arg name="number" value="1"/>
+                </bean>
+                <bean class="com.wikia.search.monitor.TimeFrame" factory-method="minutes">
+                    <constructor-arg name="number" value="30"/>
+                </bean>
+                <bean class="com.wikia.search.monitor.TimeFrame" factory-method="hours">
+                    <constructor-arg name="number" value="24"/>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <bean name="monitorService" factory-bean="monitorServiceFactory" factory-method="createMonitorService"/>
 </beans>
