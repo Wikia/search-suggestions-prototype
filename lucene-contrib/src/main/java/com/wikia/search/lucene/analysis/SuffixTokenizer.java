@@ -5,10 +5,7 @@ package com.wikia.search.lucene.analysis;
 
 import com.wikia.search.util.CircularBuffer;
 import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
-import org.apache.lucene.analysis.tokenattributes.PositionLengthAttribute;
+import org.apache.lucene.analysis.tokenattributes.*;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -19,6 +16,8 @@ public class SuffixTokenizer extends Tokenizer {
     private final PositionIncrementAttribute posIncAtt = addAttribute(PositionIncrementAttribute.class);
     private final PositionLengthAttribute posLenAtt = addAttribute(PositionLengthAttribute.class);
     private final OffsetAttribute offsetAtt = addAttribute(OffsetAttribute.class);
+    private final TypeAttribute typeAttribute = addAttribute(TypeAttribute.class);
+    private final KeywordAttribute keywordAttribute = addAttribute(KeywordAttribute.class);
     private final int maxTokens;
     private final Set<Character> tokenBreakers;
     private CircularBuffer buffer;
@@ -30,6 +29,24 @@ public class SuffixTokenizer extends Tokenizer {
         this.maxTokens = maxTokens;
         this.tokenBreakers = tokenBreakers;
         this.buffer =  new CircularBuffer( maxTokenSize );
+        typeAttribute.setType("shingle");
+        keywordAttribute.setKeyword(true);
+    }
+
+    @Override
+    public void end() throws IOException {
+        super.end();
+        offsetPosition += buffer.getSize();
+        while ( input.read() != -1 ) offsetPosition++;
+        offsetAtt.setOffset( offsetPosition, offsetPosition );
+    }
+
+    @Override
+    public void reset() throws IOException {
+        super.reset();
+        tokenWritten = 0;
+        offsetPosition = 0;
+        buffer.reset();
     }
 
     @Override

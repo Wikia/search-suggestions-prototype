@@ -2,10 +2,7 @@ package com.wikia.search.lucene.analysis;
 
 import junit.framework.Assert;
 import org.apache.lucene.analysis.Token;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttributeImpl;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttributeImpl;
+import org.apache.lucene.analysis.tokenattributes.*;
 import org.apache.lucene.util.Attribute;
 import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeSource;
@@ -64,6 +61,8 @@ public class SuffixTokenizerTest {
             public AttributeImpl createAttributeInstance(Class<? extends Attribute> aClass) {
                 if( aClass.equals(CharTermAttribute.class) ) {
                     return new CharTermAttributeImpl();
+                } if( aClass.equals(KeywordAttribute.class) ) {
+                    return new KeywordAttributeImpl();
                 } else if ( aClass.equals(PositionIncrementAttribute.class) ) {
                     return new PositionIncrementAttributeImpl();
                 } else {

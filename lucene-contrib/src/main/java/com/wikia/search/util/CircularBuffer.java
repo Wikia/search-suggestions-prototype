@@ -129,4 +129,9 @@ public class CircularBuffer {
         }
         return startWritingAt;
     }
+
+    public void reset() {
+        pos = 0;
+        size = 0;
+    }
 }
