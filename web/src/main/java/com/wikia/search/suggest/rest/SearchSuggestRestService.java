@@ -21,7 +21,7 @@ public class SearchSuggestRestService {
     private static Logger logger = LoggerFactory.getLogger(SearchSuggestRestService.class);
 
     @Autowired(required = true)
-    @Qualifier("searchSuggestService")
+    @Qualifier("suffixSearchSuggestService")
     private SearchService searchSuggestService;
 
     @GET

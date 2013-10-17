@@ -46,12 +46,20 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
     </bean>
     <bean name="solrSlave" factory-bean="solrConnectionFactory" factory-method="getSlave"/>
     <bean name="solrMaster" factory-bean="solrConnectionFactory" factory-method="getMaster"/>
-    <bean name="searchSuggestService" class="com.wikia.search.suggest.service.SearchServiceMetricsGatherer">
+
+    <bean name="ngramSearchSuggestService" class="com.wikia.search.suggest.service.SearchServiceMetricsGatherer">
         <constructor-arg name="searchService">
-            <bean class="com.wikia.search.suggest.service.SearchSuggestService" />
+            <bean class="com.wikia.search.suggest.service.NgramSearchSuggestService" />
         </constructor-arg>
         <constructor-arg name="registry" ref="metricRegistry" />
-        <constructor-arg name="serviceName" value="simple"/>
+        <constructor-arg name="serviceName" value="ngram"/>
+    </bean>
+    <bean name="suffixSearchSuggestService" class="com.wikia.search.suggest.service.SearchServiceMetricsGatherer">
+        <constructor-arg name="searchService">
+            <bean class="com.wikia.search.suggest.service.SuffixSearchSuggestService" />
+        </constructor-arg>
+        <constructor-arg name="registry" ref="metricRegistry" />
+        <constructor-arg name="serviceName" value="prefix"/>
     </bean>
 
     <bean name="searchSuggestRS" class="com.wikia.search.suggest.rest.SearchSuggestRestService"/>
