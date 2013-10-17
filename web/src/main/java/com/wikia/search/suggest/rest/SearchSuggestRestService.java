@@ -34,7 +34,7 @@ public class SearchSuggestRestService {
         if ( wikiId == null ) {
             return Response.serverError().entity("You need to specify wikiId.").build();
         }
-        if ( queryString == null ) {
+        if ( queryString == null || queryString.trim().equals("") ) {
             return Response.ok().entity(new ArrayList()).build();
         }
 
