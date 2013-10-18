@@ -128,31 +128,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.0</version>
-                    <executions>
-                        <execution>
-                            <id>default-cli</id>
-                            <goals>
-                                <goal>run</goal>
-                            </goals>
-                            <configuration>
-                                <port>13000</port>
-                                <path>/jaxrs-service</path>
-                                <useSeparateTomcatClassLoader>true</useSeparateTomcatClassLoader>
-                                <systemProperties>
-                                    <java.util.logging.manager>org.apache.juli.ClassLoaderLogManager</java.util.logging.manager>
-                                </systemProperties>
-                                <useSeparateTomcatClassLoader>
-                                    false
-                                </useSeparateTomcatClassLoader>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <!-- This plugin is needed for the servlet example -->
                     <groupId>org.mortbay.jetty</groupId>
                     <artifactId>jetty-maven-plugin</artifactId>
                     <version>${jettyVersion}</version>
@@ -206,32 +181,38 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jettyVersion}</version>
+                <configuration>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
+                    <stopPort>8005</stopPort>
+                    <stopKey>STOP</stopKey>
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                            <port>${test.server.port}</port>
+                            <maxIdleTime>60000</maxIdleTime>
+                        </connector>
+                    </connectors>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>start-tomcat</id>
-                        <goals>
-                            <goal>run-war</goal>
-                        </goals>
+                        <id>start-jetty</id>
                         <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
-                            <!--suppress MavenModelInspection -->
-                            <port>${test.server.port}</port>
-                            <path>/jaxrs-service</path>
-                            <fork>true</fork>
-                            <useSeparateTomcatClassLoader>true</useSeparateTomcatClassLoader>
+                            <scanIntervalSeconds>0</scanIntervalSeconds>
+                            <daemon>true</daemon>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>stop-tomcat</id>
-                        <goals>
-                            <goal>shutdown</goal>
-                        </goals>
+                        <id>stop-jetty</id>
                         <phase>post-integration-test</phase>
-                        <configuration>
-                            <path>/jaxrs-service</path>
-                        </configuration>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -248,7 +229,7 @@
                         <configuration>
                             <systemPropertyVariables>
                                 <!--suppress MavenModelInspection -->
-                                <service.url>http://localhost:${test.server.port}/jaxrs-service</service.url>
+                                <service.url>http://localhost:${test.server.port}/</service.url>
                             </systemPropertyVariables>
                         </configuration>
                     </execution>

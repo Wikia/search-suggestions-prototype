@@ -19,7 +19,7 @@ public class SolrHealthCheck extends HealthCheck {
     protected Result check() throws Exception {
         SolrPingResponse ping = solrServer.ping();
         if( ping.getStatus() == 0 ) {
-            if ( ping.getElapsedTime() < 100 ) {
+            if ( ping.getElapsedTime() < 1000 ) {
                 return Result.healthy(String.format("Solr ping response time: %d", ping.getElapsedTime()));
             } else {
                 String message = String.format("Solr ping response timeout: %d", ping.getElapsedTime());
