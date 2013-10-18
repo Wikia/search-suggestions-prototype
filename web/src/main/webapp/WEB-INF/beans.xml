@@ -20,6 +20,7 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
         <jaxrs:serviceBeans>
             <ref bean="searchSuggestRS"/>
             <bean class="com.wikia.search.monitor.rest.HealthRestService" />
+            <bean class="com.wikia.search.suggest.rest.TrackingRestService" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.wikia.search.http.CrossOriginResourceSharingFilter"/>
@@ -34,6 +35,8 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
     <bean name="healthCheckService" class="com.wikia.search.monitor.healthcheck.HealthCheckServiceImpl"/>
     <bean name="metricRegistry" class="com.codahale.metrics.MetricRegistry"/>
     <bean name="healthCheckRegistry" class="com.codahale.metrics.health.HealthCheckRegistry"/>
+
+    <bean name="querySanitizer" class="com.wikia.search.suggest.service.QuerySanitizerImpl" />
 
     <bean name="httpMonitoringProcessor" class="com.wikia.search.solr.HttpMonitoringProcessor"/>
     <bean name="solrConnectionFactory" class="com.wikia.search.solr.SolrConnectionFactory">
