@@ -1,0 +1,2 @@
+solr.slave.url=http://localhost:8983/solr/suggest
+solr.master.url=http://localhost:8983/solr/suggest

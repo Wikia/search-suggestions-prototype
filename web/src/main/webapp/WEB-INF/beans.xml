@@ -12,7 +12,7 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
 
   <import resource="classpath:META-INF/cxf/cxf.xml" />
 
-  <context:property-placeholder/>
+  <context:property-placeholder location="classpath:search-suggest.propperties"/>
   <context:annotation-config/>
   <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer"/>
   <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"/>
@@ -46,6 +46,8 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
                 <ref bean="httpMonitoringProcessor" />
             </array>
         </constructor-arg>
+        <property name="masterUrl" value="${solr.slave.url}" />
+        <property name="slaveUrl" value="${solr.master.url}" />
     </bean>
     <bean name="solrSlave" factory-bean="solrConnectionFactory" factory-method="getSlave"/>
     <bean name="solrMaster" factory-bean="solrConnectionFactory" factory-method="getMaster"/>
