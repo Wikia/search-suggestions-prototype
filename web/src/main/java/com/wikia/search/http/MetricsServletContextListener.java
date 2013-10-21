@@ -9,6 +9,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContextEvent;
 
+/**
+ * This is required by MetricsServlet to find appropriate metrics registry.
+ */
 public class MetricsServletContextListener extends MetricsServlet.ContextListener {
     private static Logger  logger = LoggerFactory.getLogger(MetricsServletContextListener.class);
     @Autowired()

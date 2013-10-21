@@ -8,6 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.*;
 
+/**
+ * Creates response wrapper that ignores flush calls and buffers whole response.
+ * This way we are able to send response with content-length header.
+ */
 public class BufferFilter implements Filter {
     private static Logger  logger = LoggerFactory.getLogger(BufferFilter.class);
 

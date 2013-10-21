@@ -6,6 +6,9 @@ import org.apache.cxf.message.Message;
 
 import javax.ws.rs.core.Response;
 
+/**
+ * Adds "Access-Control-Allow-Origin: *" header to response.
+ */
 public class CrossOriginResourceSharingFilter implements ResponseHandler {
 
     @Override
