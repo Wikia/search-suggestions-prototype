@@ -320,6 +320,7 @@
                             <systemPropertyVariables>
                                 <!--suppress MavenModelInspection -->
                                 <service.url>http://localhost:${test.server.port}/${test.app.context}/</service.url>
+                                <!--suppress MavenModelInspection -->
                                 <solr.url>http://localhost:${test.server.port}/${solr.server.context}/suggest/</solr.url>
                             </systemPropertyVariables>
                         </configuration>
