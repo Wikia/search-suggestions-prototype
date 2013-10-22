@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.text.MessageFormat;
 import java.util.List;
 
+/**
+ * @deprecated we might want to still use it for performance comparison.
+ */
 public class NgramSearchSuggestService implements SearchService {
     private static Logger logger = LoggerFactory.getLogger(NgramSearchSuggestService.class);
 

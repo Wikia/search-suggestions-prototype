@@ -11,8 +11,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Search service. Performing search using fields:
+ * <ul>
+ *   <li>title_prefix_suffix</li>
+ *   <li>redirects_prefix_suffix_mv</li>
+ *   <li>title_simple - boost title exact match</li>
+ *   <li>redirects_simple_mv - boost redirects exact match</li>
+ *   <li>views_i - boosting only</li>
+ *   <li>backlinks_i - boosting only</li>
+ * </ul>
+ */
 public class SuffixSearchSuggestService implements SearchService {
     private static Logger logger = LoggerFactory.getLogger(SuffixSearchSuggestService.class);
     private SolrServer solrServer;
@@ -31,6 +43,11 @@ public class SuffixSearchSuggestService implements SearchService {
     public List<Suggestion> search( int wikiId, String query ) throws SearchException {
         try {
             query = querySanitizer.sanitize(query);
+            if ( query.isEmpty() ) {
+                // If query is empty we will create query that is not valid. i.e. (title_simple:)
+                // There is no point of asking solr for such queries. We just return empty list.
+                return new ArrayList<>();
+            }
             SolrQuery solrQuery = new SolrQuery();
             solrQuery.setTimeAllowed( timeAllowed );
             solrQuery.setQuery("wikiId_i:" + wikiId);

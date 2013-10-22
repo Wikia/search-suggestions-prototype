@@ -237,7 +237,7 @@
                             <contextPath>/${test.app.context}</contextPath>
                         </contextHandler>
                     </contextHandlers>
-                    <jettyXml>src/test/resources/jetty-env.xml</jettyXml>
+                    <jettyXml>${project.basedir}/src/test/resources/jetty-env.xml</jettyXml>
                     <systemProperties>
                         <force>true</force>
                         <systemProperty>
