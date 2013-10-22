@@ -59,6 +59,7 @@ public class SolrConnectionFactory {
     }
 
     public void setSlaveUrl(String slaveUrl) {
+        logger.info("Setting solr slave to: " + slaveUrl);
         this.slaveUrl = slaveUrl;
     }
 
@@ -67,6 +68,7 @@ public class SolrConnectionFactory {
     }
 
     public void setMasterUrl(String masterUrl) {
+        logger.info("Setting solr master to: " + masterUrl);
         this.masterUrl = masterUrl;
     }
 }

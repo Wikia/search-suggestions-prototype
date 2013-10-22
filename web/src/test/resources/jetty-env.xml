@@ -5,7 +5,7 @@
 
     <New id="solrHome" class="org.eclipse.jetty.plus.jndi.EnvEntry">
         <Arg>solr/home</Arg>
-        <Arg type="java.lang.String">target/classes/</Arg>
+        <Arg type="java.lang.String">target/test-classes/solr-home/</Arg>
         <Arg type="boolean">true</Arg>
     </New>
 
