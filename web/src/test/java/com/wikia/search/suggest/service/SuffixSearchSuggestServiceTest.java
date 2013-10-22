@@ -3,6 +3,7 @@ package com.wikia.search.suggest.service;
 import com.wikia.search.suggest.model.Suggestion;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.junit.Test;
 
@@ -26,6 +27,23 @@ public class SuffixSearchSuggestServiceTest {
         assertThat(suggestions).isEmpty();
     }
 
+    @Test
+    public void testSearchThrows() throws Exception {
+        SolrServer solrServerMock =  mock(SolrServer.class);
+        when(solrServerMock.query(any(SolrQuery.class))).thenThrow(new SolrServerException("foo"));
+        QuerySanitizer querySanitizer =  mock(QuerySanitizer.class);
+        when(querySanitizer.sanitize("foo")).thenReturn("asd");
+
+        SuffixSearchSuggestService suffixSearchSuggestService = new SuffixSearchSuggestService(solrServerMock,querySanitizer);
+        boolean wasException = false;
+        try {
+            suffixSearchSuggestService.search(13, "foo");
+        } catch (SearchException ex) {
+            wasException = true;
+            assertThat(ex.getCause()).isInstanceOf(SolrServerException.class);
+        }
+        assertThat(wasException).isTrue();
+    }
 
     @Test
     public void testSearch() throws Exception {
