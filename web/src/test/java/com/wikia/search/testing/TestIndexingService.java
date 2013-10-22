@@ -41,4 +41,8 @@ public class TestIndexingService {
     public void commit() throws IOException, SolrServerException {
         solrServer.commit(true, true);
     }
+
+    public void clear() throws IOException, SolrServerException {
+        solrServer.deleteByQuery("testing_artifact_b:true");
+    }
 }

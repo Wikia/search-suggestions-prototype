@@ -6,6 +6,7 @@ import com.wikia.search.testing.TestingSolrServerFactory;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -23,19 +24,26 @@ import static org.junit.Assert.assertEquals;
 public class SearchSuggestRestServiceIT {
     private static final Logger logger = LoggerFactory.getLogger(SearchSuggestRestServiceIT.class);
     private String endpointUrl;
+    TestIndexingService indexingService;
 
     @Before
-    public void beforeClass() throws IOException, SolrServerException {
+    public void before() throws IOException, SolrServerException {
         endpointUrl = System.getProperty("service.url") + "api/search-suggest";
         logger.info(endpointUrl);
 
-        TestIndexingService indexingService = new TestingSolrServerFactory().getIndexingService();
+        indexingService = new TestingSolrServerFactory().getIndexingService();
+        indexingService.clear();
         indexingService.addDocument(1234, 1, 0, "John Price", "...", "http://img.com/img/img.jpg", 100, 100, Lists.newArrayList("John", "Price"));
         indexingService.addDocument(1234, 2, 0, "Spider-Man", "...", "http://img.com/img/img.jpg", 100, 100, Lists.newArrayList("Spider"));
         indexingService.addDocument(1234, 6, 0, "John (\"Soap\") MacTavish", "Captain John \"Soap\" MacTavish was the Scottish[4] main protagonist", "http://img.com/jm.jpg", 500, 100, Lists.newArrayList("Soap", "MacTavish"));
         indexingService.addDocument(1234, 8, 0, "John McCain", "...", "http://img.com/jm.jpg", 10, 100, new ArrayList<String>());
         indexingService.addDocument(1239, 13, 0, "John Price", "...", "http://img.com/img.jpg", 100000, 100, Lists.newArrayList("John", "Price"));
         indexingService.commit();
+    }
+
+    @After
+    public void after() throws IOException, SolrServerException {
+        indexingService.clear();
     }
 
     @Test
