@@ -123,6 +123,20 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+            <version>0.8.1</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- embedded core for testing -->
         <dependency>
             <groupId>org.apache.solr</groupId>
@@ -306,6 +320,7 @@
                             <systemPropertyVariables>
                                 <!--suppress MavenModelInspection -->
                                 <service.url>http://localhost:${test.server.port}/${test.app.context}/</service.url>
+                                <solr.url>http://localhost:${test.server.port}/${solr.server.context}/suggest/</solr.url>
                             </systemPropertyVariables>
                         </configuration>
                     </execution>
