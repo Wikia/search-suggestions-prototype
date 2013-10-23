@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.*;
@@ -29,7 +30,7 @@ public class BufferFilter implements Filter {
         GenericResponseWrapper wrapper = new GenericResponseWrapper(httpServletResponse);
         chain.doFilter(request,wrapper);
         if ( httpServletResponse.isCommitted() ) {
-            logger.warn("Trying to replace content of already committed response.");
+            logger.warn("Trying to set header of already committed response." + ((request instanceof HttpServletRequest) ? ((HttpServletRequest)request).getRequestURI() : ""));
         }
         response.setContentLength(wrapper.getData().length);
         out.write(wrapper.getData());
