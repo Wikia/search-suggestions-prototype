@@ -59,7 +59,7 @@ public class SuffixSearchSuggestService implements SearchService {
 
             return response.getBeans(Suggestion.class);
         } catch (SolrServerException e) {
-            logger.error(MessageFormat.format("Error while fetching results for {0},\"{1}\"", wikiId, query), e);
+            logger.debug(MessageFormat.format("Error while fetching results for {0},\"{1}\"", wikiId, query), e);
             throw new SearchException(e);
         }
     }

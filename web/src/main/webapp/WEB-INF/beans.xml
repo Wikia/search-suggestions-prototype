@@ -60,6 +60,12 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
                 <ref bean="httpMonitoringProcessor" />
             </array>
         </constructor-arg>
+        <constructor-arg name="clientConnectionManager">
+            <bean class="org.apache.http.impl.conn.PoolingClientConnectionManager">
+                <property name="defaultMaxPerRoute" value="200"/>
+                <property name="maxTotal" value="500"/>
+            </bean>
+        </constructor-arg>
         <property name="masterUrl" value="${solr.slave.url}" />
         <property name="slaveUrl" value="${solr.master.url}" />
     </bean>
