@@ -20,6 +20,20 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
         <jaxrs:serviceBeans>
             <ref bean="searchSuggestRS"/>
             <bean class="com.wikia.search.monitor.rest.HealthRestService" />
+            <bean class="com.wikia.search.monitor.rest.MetricsRestService">
+                <constructor-arg name="timeWindowMetricsServiceList">
+                    <list>
+                        <bean class="com.wikia.search.monitor.timewindow.TimeWindowMetricsServiceImpl">
+                            <constructor-arg name="timeFrame">
+                                <bean class="com.wikia.search.monitor.TimeFrame" factory-method="secondBased">
+                                    <constructor-arg value="3600" />
+                                </bean>
+                            </constructor-arg>
+                            <constructor-arg name="metricRegistry" ref="metricRegistry"/>
+                        </bean>
+                    </list>
+                </constructor-arg>
+            </bean>
             <bean class="com.wikia.search.suggest.rest.TrackingRestService" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
@@ -61,25 +75,28 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
     </bean>
     <bean name="suffixSearchSuggestService" class="com.wikia.search.suggest.service.SearchServiceMetricsGatherer">
         <constructor-arg name="searchService">
-            <bean class="com.wikia.search.suggest.service.SuffixSearchSuggestService" />
+            <bean class="com.wikia.search.suggest.service.SuffixSearchSuggestService">
+                <constructor-arg name="querySanitizer" ref="querySanitizer"/>
+                <constructor-arg name="solrServer" ref="solrSlave"/>
+            </bean>
         </constructor-arg>
         <constructor-arg name="registry" ref="metricRegistry" />
         <constructor-arg name="serviceName" value="prefix"/>
     </bean>
 
     <bean name="searchSuggestRS" class="com.wikia.search.suggest.rest.SearchSuggestRestService"/>
-    <bean name="monitorServiceFactory" class="com.wikia.search.monitor.MonitorServiceFactory">
+    <bean name="monitorServiceFactory" class="com.wikia.search.monitor.slowqueries.MonitorServiceFactory">
         <property name="slowQueriesCount" value="10"/>
         <property name="timeFrames">
             <array>
-                <bean class="com.wikia.search.monitor.TimeFrame" factory-method="minutes">
-                    <constructor-arg name="number" value="1"/>
+                <bean class="org.joda.time.Period" factory-method="minutes">
+                    <constructor-arg value="1"/>
                 </bean>
-                <bean class="com.wikia.search.monitor.TimeFrame" factory-method="minutes">
-                    <constructor-arg name="number" value="30"/>
+                <bean class="org.joda.time.Period" factory-method="minutes">
+                    <constructor-arg value="30"/>
                 </bean>
-                <bean class="com.wikia.search.monitor.TimeFrame" factory-method="hours">
-                    <constructor-arg name="number" value="24"/>
+                <bean class="org.joda.time.Period" factory-method="hours">
+                    <constructor-arg value="24"/>
                 </bean>
             </array>
         </property>

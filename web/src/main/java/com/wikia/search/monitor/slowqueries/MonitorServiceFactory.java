@@ -1,21 +1,19 @@
-package com.wikia.search.monitor;
+package com.wikia.search.monitor.slowqueries;
 
-import com.wikia.search.monitor.slowqueries.GreedySlowQueryMonitor;
-import com.wikia.search.monitor.slowqueries.HttpRequestMeasurement;
-import com.wikia.search.monitor.slowqueries.SlowQueryMonitor;
+import org.joda.time.Period;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MonitorServiceFactory {
-    private List<TimeFrame> timeFrames;
+    private List<Period> timeFrames;
     private int slowQueriesCount = 10;
 
     public MonitorService createMonitorService() {
-        Map<TimeFrame, SlowQueryMonitor<HttpRequestMeasurement>> timeFrameSlowQueryMonitorMap
+        Map<Period, SlowQueryMonitor<HttpRequestMeasurement>> timeFrameSlowQueryMonitorMap
                 = new HashMap<>();
-        for( TimeFrame timeFrame: getTimeFrames() ) {
+        for( Period timeFrame: getTimeFrames() ) {
             timeFrameSlowQueryMonitorMap.put(
                     timeFrame,
                     new GreedySlowQueryMonitor<HttpRequestMeasurement>(getSlowQueriesCount(), timeFrame) );
@@ -23,11 +21,11 @@ public class MonitorServiceFactory {
         return new MonitorServiceImpl( timeFrameSlowQueryMonitorMap );
     }
 
-    public List<TimeFrame> getTimeFrames() {
+    public List<Period> getTimeFrames() {
         return timeFrames;
     }
 
-    public void setTimeFrames(List<TimeFrame> timeFrames) {
+    public void setTimeFrames(List<Period> timeFrames) {
         this.timeFrames = timeFrames;
     }
 

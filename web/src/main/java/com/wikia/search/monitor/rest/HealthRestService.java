@@ -1,9 +1,10 @@
 package com.wikia.search.monitor.rest;
 
-import com.wikia.search.monitor.*;
 import com.wikia.search.monitor.healthcheck.HealthCheckResult;
 import com.wikia.search.monitor.healthcheck.HealthCheckService;
 import com.wikia.search.monitor.slowqueries.HttpRequestMeasurement;
+import com.wikia.search.monitor.slowqueries.MonitorService;
+import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +23,21 @@ public class HealthRestService {
     private static Logger logger = LoggerFactory.getLogger(HealthRestService.class);
     private final MonitorService monitorService;
     private final HealthCheckService healthCheck;
-    private final Map<String, TimeFrame> timeFrames = new HashMap<>();
+    private final Map<String, Period> timeFrames = new HashMap<>();
 
     @Autowired(required = true)
     public HealthRestService(MonitorService monitorService, HealthCheckService healthCheck) {
         this.monitorService = monitorService;
         this.healthCheck = healthCheck;
-        timeFrames.put("1min", TimeFrame.minutes(1));
-        timeFrames.put("30min", TimeFrame.minutes(30));
-        timeFrames.put("24h", TimeFrame.hours(24));
+        timeFrames.put("1min", Period.minutes(1));
+        timeFrames.put("30min", Period.minutes(30));
+        timeFrames.put("24h", Period.hours(24));
     }
     @GET
     @Path("/slowHttpRequests/{timeFrame}")
     @Produces("application/json")
     public Response slowHttpRequests(@PathParam("timeFrame") String timeFrameName ) {
-        TimeFrame timeFrame = timeFrames.get(timeFrameName);
+        Period timeFrame = timeFrames.get(timeFrameName);
         List<HttpRequestMeasurement> slowHttpRequests = monitorService.getSlowHttpRequests(timeFrame);
         return Response.ok().entity(slowHttpRequests).build();
     }
@@ -53,4 +54,5 @@ public class HealthRestService {
             return Response.serverError().entity(healthCheckResult).build();
         }
     }
+
 }

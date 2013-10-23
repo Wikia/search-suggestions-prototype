@@ -1,14 +1,13 @@
-package com.wikia.search.monitor;
+package com.wikia.search.monitor.slowqueries;
 
-import com.wikia.search.monitor.slowqueries.HttpRequestMeasurement;
-import com.wikia.search.monitor.slowqueries.SlowQueryMonitor;
+import org.joda.time.Period;
 
 import java.util.List;
 import java.util.Map;
 
 public class MonitorServiceImpl implements MonitorService {
-    private final Map<TimeFrame, SlowQueryMonitor<HttpRequestMeasurement>> slowQueryMonitorMap;
-    public MonitorServiceImpl(Map<TimeFrame, SlowQueryMonitor<HttpRequestMeasurement>> slowQueryMonitorMap ) {
+    private final Map<Period, SlowQueryMonitor<HttpRequestMeasurement>> slowQueryMonitorMap;
+    public MonitorServiceImpl(Map<Period, SlowQueryMonitor<HttpRequestMeasurement>> slowQueryMonitorMap ) {
         this.slowQueryMonitorMap = slowQueryMonitorMap;
     }
 
@@ -20,7 +19,7 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public List<HttpRequestMeasurement> getSlowHttpRequests(TimeFrame timeFrame) {
+    public List<HttpRequestMeasurement> getSlowHttpRequests(Period timeFrame) {
         if ( !slowQueryMonitorMap.containsKey(timeFrame) ) {
             throw new IllegalArgumentException("No data is gathered for this time frame " + timeFrame);
         }

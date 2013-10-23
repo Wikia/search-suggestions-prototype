@@ -1,8 +1,8 @@
 package com.wikia.search.monitor.slowqueries;
 
-import com.wikia.search.monitor.TimeFrame;
-import org.joda.time.DateTimeZone;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Period;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.TreeSet;
 public class GreedySlowQueryMonitor<T> implements SlowQueryMonitor<T> {
     private final SortedSet<Entry<T>> window = new TreeSet<>();
     private final int limit;
-    private final TimeFrame timeFrame;
+    private final Period timeFrame;
 
-    public GreedySlowQueryMonitor(int limit, TimeFrame timeFrame) {
+    public GreedySlowQueryMonitor(int limit, Period timeFrame) {
         this.limit = limit;
         this.timeFrame = timeFrame;
     }
@@ -46,7 +46,7 @@ public class GreedySlowQueryMonitor<T> implements SlowQueryMonitor<T> {
         // we should add another set here sorted by date
         // to reduce complexity of this method to log(n)
         DateTime dateTime = DateTime.now(DateTimeZone.UTC);
-        DateTime threshold = dateTime.minus(timeFrame.getPeriod());
+        DateTime threshold = dateTime.minus(timeFrame);
         List<Entry<T>> toRemove = new ArrayList<>();
         for( Entry<T> element: window ) {
             if ( element.dateTime.isBefore(threshold) ) {

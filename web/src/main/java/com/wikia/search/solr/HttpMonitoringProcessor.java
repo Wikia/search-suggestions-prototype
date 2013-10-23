@@ -3,7 +3,7 @@ package com.wikia.search.solr;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.wikia.search.monitor.slowqueries.HttpRequestMeasurement;
-import com.wikia.search.monitor.MonitorService;
+import com.wikia.search.monitor.slowqueries.MonitorService;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -26,7 +26,7 @@ public class HttpMonitoringProcessor implements HttpProcessor {
     @Autowired
     public HttpMonitoringProcessor(MetricRegistry registry, MonitorService monitorService) {
         this.monitorService = monitorService;
-        httpRequestTimer = registry.timer(MetricRegistry.name(HttpMonitoringProcessor.class, "httpRequestTimer"));
+        httpRequestTimer = registry.timer(MetricRegistry.name(HttpMonitoringProcessor.class.getSimpleName(), "httpRequestTimer"));
     }
 
     @Override

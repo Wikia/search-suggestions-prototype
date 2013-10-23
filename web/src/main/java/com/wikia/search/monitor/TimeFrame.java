@@ -1,40 +1,34 @@
 package com.wikia.search.monitor;
 
-import org.joda.time.Period;
+import org.joda.time.Duration;
 
 public class TimeFrame {
-    private final Period period;
+    private final Duration tickDuration;
+    private final int tickCount;
 
-    public static TimeFrame seconds( int number ) {
-        return new TimeFrame(Period.seconds(number));
-    }
-    public static TimeFrame minutes( int number ) {
-        return new TimeFrame(Period.minutes(number));
-    }
-    public static TimeFrame hours( int number ) {
-        return new TimeFrame(Period.hours(number));
+    public static TimeFrame secondBased( int ticks ) {
+        return new TimeFrame(Duration.standardSeconds(1), ticks);
     }
 
-    public TimeFrame(Period period) {
-        this.period = period;
+    public TimeFrame(Duration tickDuration, int tickCount) {
+        this.tickDuration = tickDuration;
+        this.tickCount = tickCount;
     }
 
-    public Period getPeriod() {
-        return period;
+    public Duration getTickDuration() {
+        return tickDuration;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TimeFrame)) return false;
+    public int getTickCount() {
+        return tickCount;
+    }
 
-        TimeFrame timeFrame = (TimeFrame) o;
-
-        return period.equals(timeFrame.period);
+    public Duration getDuration() {
+        return Duration.millis(tickDuration.getMillis() * tickCount);
     }
 
     @Override
-    public int hashCode() {
-        return period.hashCode();
+    public String toString() {
+        return getDuration().toString();
     }
 }

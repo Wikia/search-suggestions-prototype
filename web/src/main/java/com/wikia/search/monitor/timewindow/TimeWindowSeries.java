@@ -1,33 +1,29 @@
 package com.wikia.search.monitor.timewindow;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.collections.buffer.CircularFifoBuffer;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Duration;
 
 public class TimeWindowSeries<T> {
-    private final List<T> buffer;
-    private int size = 0;
-    private int pos = 0;
-    private int capacity;
+    private final CircularFifoBuffer buffer;
+    private final Duration timeTick;
+    private DateTime current;
 
-    public TimeWindowSeries(int capacity) {
-        buffer = new ArrayList<T>(capacity);
-        this.capacity = capacity;
+    public TimeWindowSeries(int tickCapacity, Duration timeTick) {
+        this.timeTick = timeTick;
+        buffer = new CircularFifoBuffer(tickCapacity);
+        current = DateTime.now(DateTimeZone.UTC);
     }
 
-    public void insert(T element) {
-        buffer.add( (pos+size) % capacity, element );
-        if ( size == capacity ) {
-            pos++;
-        } else {
-            size++;
+    public synchronized void update(Double element, DateTime at) {
+        while( current.plus(timeTick).isBefore(at) ) {
+            current = current.plus(timeTick);
+            buffer.add(element);
         }
     }
 
-    public List<T> snapshot() {
-        List<T> listView = new ArrayList<>( buffer.subList(pos, Math.min(pos+size, capacity)) );
-        if ( pos+size > capacity ) {
-            listView.addAll(buffer.subList(0, pos + size - capacity));
-        }
-        return listView;
+    public synchronized T[] snapshot() {
+        return (T[]) buffer.toArray();
     }
 }
