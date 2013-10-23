@@ -30,6 +30,9 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
                                 </bean>
                             </constructor-arg>
                             <constructor-arg name="metricRegistry" ref="metricRegistry"/>
+                            <constructor-arg name="executorService">
+                                <bean class="java.util.concurrent.Executors" factory-method="newSingleThreadScheduledExecutor" destroy-method="shutdownNow" />
+                            </constructor-arg>
                         </bean>
                     </list>
                 </constructor-arg>

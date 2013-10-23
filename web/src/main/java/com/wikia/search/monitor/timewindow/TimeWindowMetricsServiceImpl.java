@@ -15,23 +15,23 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TimeWindowMetricsServiceImpl implements TimeWindowMetricsService {
     private static Logger logger = LoggerFactory.getLogger(TimeWindowMetricsServiceImpl.class);
     private final Map<String, TimeWindowSeries<Double>> timeWindowSeriesMap;
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService executorService;
     private final TimeFrame timeFrame;
     private final MetricRegistry metricRegistry;
-    private final List<Double> percentiles = Lists.<Double>newArrayList(10d, 50d, 90d, 99d, 99.9d);
+    private final List<Double> percentiles = Lists.newArrayList(10d, 50d, 90d, 99d, 99.9d);
 
-    public TimeWindowMetricsServiceImpl(TimeFrame timeFrame, MetricRegistry metricRegistry) {
+    public TimeWindowMetricsServiceImpl(ScheduledExecutorService executorService, TimeFrame timeFrame, MetricRegistry metricRegistry) {
+        this.executorService = executorService;
         this.timeFrame = timeFrame;
         this.metricRegistry = metricRegistry;
-        timeWindowSeriesMap = Collections.synchronizedMap(new HashMap());
-        executorService.scheduleAtFixedRate(new MetricGatherAction()
+        timeWindowSeriesMap = Collections.synchronizedMap(new HashMap<String, TimeWindowSeries<Double>>());
+        this.executorService.scheduleAtFixedRate(new MetricGatherAction()
                 , 1
                 , timeFrame.getTickDuration().getMillis()
                 , TimeUnit.MILLISECONDS);
@@ -90,6 +90,7 @@ public class TimeWindowMetricsServiceImpl implements TimeWindowMetricsService {
         @Override
         public void run() {
             gather();
+            logger.debug("Gather action triggered.");
         }
     }
 }

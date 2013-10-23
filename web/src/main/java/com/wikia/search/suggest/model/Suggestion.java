@@ -2,6 +2,7 @@ package com.wikia.search.suggest.model;
 
 import org.apache.solr.client.solrj.beans.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Suggestion {
@@ -13,9 +14,9 @@ public class Suggestion {
     @Field("pageUrl_url")
     private String path;
     @Field("redirects_ngram_mv")
-    private List<String> redirects;
+    private List<String> redirects = new ArrayList<>();
     @Field("thumbnail_url")
-    private String thumbnail = "http://slot1.images.wikia.nocookie.net/__cb62283/common/extensions/wikia/Search/images/wiki_image_placeholder.png";
+    private String thumbnail;
     @Field("abstract_en") // TODO make it language agnostic
     private String summary;
 
