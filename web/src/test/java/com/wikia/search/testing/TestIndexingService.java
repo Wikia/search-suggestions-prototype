@@ -38,6 +38,19 @@ public class TestIndexingService {
         solrServer.add(document);
     }
 
+    public void addDocument( PageDocument pageDocument ) throws IOException, SolrServerException {
+        addDocument(
+                pageDocument.getWikiId(),
+                pageDocument.getArticleId(),
+                pageDocument.getNs(),
+                pageDocument.getTitle(),
+                pageDocument.getAbstract(),
+                pageDocument.getImageUrl(),
+                pageDocument.getViews(),
+                pageDocument.getBacklinks(),
+                pageDocument.getRedirects());
+    }
+
     public void commit() throws IOException, SolrServerException {
         solrServer.commit(true, true);
     }
