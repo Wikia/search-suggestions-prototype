@@ -1,6 +1,5 @@
 package com.wikia.search.bdd;
 
-import com.google.common.collect.Lists;
 import com.wikia.search.testing.PageDocument;
 import com.wikia.search.testing.PageDocumentBuilder;
 import com.wikia.search.testing.TestIndexingService;
@@ -15,7 +14,6 @@ import org.apache.solr.client.solrj.SolrServerException;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -34,18 +32,6 @@ public class QuickSearchStepDefinitions {
     @Given("^default endpoint$")
     public void defaultEndpoint() {
         endpointUrl = System.getProperty("service.url") + "api/search-suggest";
-    }
-
-    @Given("^Call of Duty dataset")
-    public void callOfDutyDataset() throws IOException, SolrServerException {
-        TestIndexingService indexingService = new TestingSolrServerFactory().getIndexingService();
-        indexingService.clear();
-        indexingService.addDocument(wikiId, 1, 0, "John Price", "...", "http://img.com/img/img.jpg", 100, 100, Lists.newArrayList("John", "Price"));
-        indexingService.addDocument(wikiId, 2, 0, "Spider-Man", "...", "http://img.com/img/img.jpg", 100, 100, Lists.newArrayList("Spider"));
-        indexingService.addDocument(wikiId, 6, 0, "John (\"Soap\") MacTavish", "Captain John \"Soap\" MacTavish was the Scottish[4] main protagonist", "http://img.com/jm.jpg", 500, 100, Lists.newArrayList("Soap", "MacTavish"));
-        indexingService.addDocument(wikiId, 8, 0, "John McCain", "...", "http://img.com/jm.jpg", 10, 100, new ArrayList<String>());
-        indexingService.addDocument(123, 13, 0, "John Price", "...", "http://img.com/img.jpg", 100000, 100, Lists.newArrayList("John", "Price"));
-        indexingService.commit();
     }
 
     @Given("^following dataset")
