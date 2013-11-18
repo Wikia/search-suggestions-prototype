@@ -31,6 +31,7 @@ Feature: As I Quick-Search user
     And default endpoint
     When I query for "Jo"
     Then I want to get "John 2" as first result
+    And I want to see exactly 2 results
 
   Scenario: I don't want to get irrelevant results
     Given following dataset:
