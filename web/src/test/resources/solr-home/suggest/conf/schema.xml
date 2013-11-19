@@ -473,13 +473,13 @@
     <fieldType name="text_ps" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="query">
         <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\-&amp;_]+)" replacement=""/>
-        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\-_)(*&amp;^%$#@!\s:&quot;&lt;&gt;(){}\[\]?\/&quot;&apos;]+)" replacement=" "/>
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\\\\\-\^\[\]_)(*&amp;%$#@!\s:&quot;&lt;&gt;(){}?\/~`+=\;.,]+)" replacement=" "/>
         <tokenizer class="solr.KeywordTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
       <analyzer type="index">
         <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\-&amp;_]+)" replacement=""/>
-        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\-_)(*&amp;^%$#@!\s:&quot;&lt;&gt;(){}\[\]?\/&quot;&apos;]+)" replacement=" "/>
+        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\\\\\-\^\[\]_)(*&amp;%$#@!\s:&quot;&lt;&gt;(){}?\/~`+=\;.,]+)" replacement=" "/>
         <tokenizer class="com.wikia.search.lucene.analysis.SuffixTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
@@ -487,13 +487,13 @@
     <fieldType name="text_simple" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="query">
         <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\-&amp;_]+)" replacement=""/>
-        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\-_)(*&amp;^%$#@!\s:&quot;&lt;&gt;(){}\[\]?\/&quot;&apos;]+)" replacement=" "/>
+          <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\\\\\-\^\[\]_)(*&amp;%$#@!\s:&quot;&lt;&gt;(){}?\/~`+=\;.,]+)" replacement=" "/>
         <tokenizer class="solr.KeywordTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>
       <analyzer type="index">
         <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\-&amp;_]+)" replacement=""/>
-        <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\-_)(*&amp;^%$#@!\s:&quot;&lt;&gt;(){}\[\]?\/&quot;&apos;]+)" replacement=" "/>
+          <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="([\\\\\-\^\[\]_)(*&amp;%$#@!\s:&quot;&lt;&gt;(){}?\/~`+=\;.,]+)" replacement=" "/>
         <tokenizer class="solr.KeywordTokenizerFactory"/>
         <filter class="solr.LowerCaseFilterFactory"/>
       </analyzer>

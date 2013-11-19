@@ -49,14 +49,14 @@ public class QuickSearchStepDefinitions {
         indexingService.commit();
     }
 
-    @Then("^I query for \"([^\"]+)\"$")
+    @Then("^I query for \"(.+)\"$")
     public void iQueryFor(String phrase) throws Throwable {
-        WebClient client = WebClient.create(endpointUrl + "?wikiId=" + wikiId + "&q=" + phrase);
+        WebClient client = WebClient.create(endpointUrl + "?wikiId=" + wikiId + "&q=" + java.net.URLEncoder.encode( phrase, "utf8" ));
         response = client.accept("application/json").get();
         responseString = IOUtils.toString((InputStream) response.getEntity());
     }
 
-    @Then("^I want to get \"([^\"]+)\" as first result$")
+    @Then("^I want to get \"(.+)\" as first result$")
     public void iWantToGetAsFirstResult(String title) throws IOException {
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 

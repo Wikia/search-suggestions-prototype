@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class QuerySanitizerImpl implements QuerySanitizer {
     private Pattern skipPattern = Pattern.compile("[\\-&_]+");
-    private Pattern spacePattern = Pattern.compile("[\\-_)(*&^%$#@!\\s:\"<>(){}\\[\\]?\\/\"']+");
+    private Pattern spacePattern = Pattern.compile("[\\\\\\-\\^\\[\\]_)(*&%$#@!\\s:\"<>(){}?\\/~`+=\\;.,]+");
     private boolean trim = true;
 
     @Override
